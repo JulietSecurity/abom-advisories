@@ -26,7 +26,7 @@ Maintainers review and merge. No auto-merge — we're the editorial layer ensuri
 
 ## Advisory format
 
-See the [abom documentation](https://github.com/JulietSecurity/abom) for the full schema specification.
+See [docs/format.md](docs/format.md) for the full schema specification.
 
 ## License
 
