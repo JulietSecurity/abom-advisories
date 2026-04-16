@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/ossf/osv-schema/main/validation/schema.json",
+  "$id": "./osv-1.7.5.json",
+  "$comment": "Forked from https://raw.githubusercontent.com/ossf/osv-schema/v1.7.5/validation/schema.json — local change: ABOM added to the $defs/prefix pattern to support the abom-advisories project ID prefix.",
   "title": "Open Source Vulnerability",
   "description": "A schema for describing a vulnerability in an open source package. See also https://ossf.github.io/osv-schema/",
   "type": "object",

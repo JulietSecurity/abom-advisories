@@ -5,7 +5,6 @@ package compiler
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -105,47 +104,6 @@ func TestCompileHappyPath(t *testing.T) {
 	}
 }
 
-func TestCompileSortOrder(t *testing.T) {
-	inDir, outDir := t.TempDir(), t.TempDir()
-
-	ids := []string{
-		"ABOM-2025-001",
-		"ABOM-2026-001",
-		"ABOM-2026-002",
-		"ABOM-2026-003",
-		"ABOM-2026-812",
-		"ABOM-2026-1869",
-	}
-	for _, id := range ids {
-		content := fmt.Sprintf("schema_version: \"1.7.5\"\nid: %s\nmodified: \"2026-01-01T00:00:00Z\"\n", id)
-		writeFile(t, inDir, id+".yaml", content)
-	}
-
-	if err := Compile(inDir, outDir, "advisories.json"); err != nil {
-		t.Fatal(err)
-	}
-
-	var db struct {
-		Advisories []struct {
-			ID string `json:"id"`
-		} `json:"advisories"`
-	}
-	readJSON(t, filepath.Join(outDir, "advisories.json"), &db)
-
-	want := []string{
-		"ABOM-2026-1869",
-		"ABOM-2026-812",
-		"ABOM-2026-003",
-		"ABOM-2026-002",
-		"ABOM-2026-001",
-		"ABOM-2025-001",
-	}
-	for i, a := range db.Advisories {
-		if a.ID != want[i] {
-			t.Errorf("advisories[%d].id = %q, want %q", i, a.ID, want[i])
-		}
-	}
-}
 
 func TestCompileReportsAllErrors(t *testing.T) {
 	inDir, outDir := t.TempDir(), t.TempDir()
@@ -168,6 +126,22 @@ func TestCompileReportsAllErrors(t *testing.T) {
 
 	if _, statErr := os.Stat(outFile); !os.IsNotExist(statErr) {
 		t.Error("output file must not be created when validation fails")
+	}
+}
+
+func TestCompileIDMismatch(t *testing.T) {
+	inDir, outDir := t.TempDir(), t.TempDir()
+
+	// Filename says 001 but the id field says 002.
+	writeFile(t, inDir, "ABOM-2026-001.yaml",
+		"schema_version: \"1.7.5\"\nid: ABOM-2026-002\nmodified: \"2026-01-01T00:00:00Z\"\n")
+
+	err := Compile(inDir, outDir, "out.json")
+	if err == nil {
+		t.Fatal("expected error for id/filename mismatch, got nil")
+	}
+	if !strings.Contains(err.Error(), "ABOM-2026-001.yaml") {
+		t.Errorf("error does not mention the offending file: %v", err)
 	}
 }
 

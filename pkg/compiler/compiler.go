@@ -10,7 +10,6 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -26,7 +25,7 @@ var osvSchemaJSON []byte
 
 // schemaID must match the $id in osv_schema.json so the compiler can resolve
 // internal $ref pointers correctly.
-const schemaID = "https://raw.githubusercontent.com/ossf/osv-schema/main/validation/schema.json"
+const schemaID = "./osv-1.7.5.json"
 
 type database struct {
 	LastUpdated string            `json:"last_updated"`
@@ -49,17 +48,6 @@ func Compile(inputDir, outputDir, outputFile string) error {
 	if err != nil {
 		return fmt.Errorf("reading input directory %q: %w", inputDir, err)
 	}
-
-	// Sort newest-first by (year desc, index desc), comparing numerically so
-	// that e.g. ABOM-2026-1869 comes before ABOM-2026-812.
-	sort.Slice(entries, func(i, j int) bool {
-		yi, ni := parseAdvisoryID(entries[i].Name())
-		yj, nj := parseAdvisoryID(entries[j].Name())
-		if yi != yj {
-			return yi > yj
-		}
-		return ni > nj
-	})
 
 	var advisories []json.RawMessage
 	var validationErrs []string
@@ -147,9 +135,18 @@ func readAndValidate(path string, schema *jsonschema.Schema) (json.RawMessage, e
 		return nil, err
 	}
 
-	if _, ok := v.(map[string]any); !ok {
+	obj, ok := v.(map[string]any)
+	if !ok {
 		return nil, fmt.Errorf("expected JSON object, got %T", v)
 	}
+
+	// The filename stem must match the id field so that advisories are
+	// always findable by name and accidental mismatches are caught early.
+	stem := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
+	if id, _ := obj["id"].(string); id != stem {
+		return nil, fmt.Errorf("id field %q does not match filename %q", id, filepath.Base(path))
+	}
+
 	return jsonBytes, nil
 }
 
@@ -241,22 +238,6 @@ func scalarToJSON(n *yaml.Node) (json.RawMessage, error) {
 		// !!str, !!timestamp, and anything else treated as a JSON string.
 		return json.Marshal(n.Value)
 	}
-}
-
-// parseAdvisoryID extracts the year and numeric index from a filename of the
-// form PREFIX-YYYY-N[.ext]. Returns (0, 0) for names that do not match.
-func parseAdvisoryID(name string) (year, index int) {
-	base := strings.TrimSuffix(name, filepath.Ext(name))
-	parts := strings.SplitN(base, "-", 3)
-	if len(parts) != 3 {
-		return 0, 0
-	}
-	y, err1 := strconv.Atoi(parts[1])
-	n, err2 := strconv.Atoi(parts[2])
-	if err1 != nil || err2 != nil {
-		return 0, 0
-	}
-	return y, n
 }
 
 func isYAMLFile(name string) bool {
