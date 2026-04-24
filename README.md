@@ -10,7 +10,7 @@ The database is fetched automatically — no configuration needed. If the fetch 
 
 ## Current advisories
 
-See [julietsecurity.github.io/abom-advisories/db/advisories.json](https://julietsecurity.github.io/abom-advisories/db/advisories.json) for the current list.
+See [advisories.juliet.sh/db/advisories.json](db/advisories.json) for the current list.
 
 ## Contributing
 
