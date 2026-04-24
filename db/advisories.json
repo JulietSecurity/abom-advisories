@@ -1,66 +1,15 @@
 {
-  "last_updated": "2026-04-15T00:00:00Z",
+  "last_updated": "2026-04-24T13:38:28Z",
   "advisories": [
-    {
-      "schema_version": "1.7.5",
-      "id": "ABOM-2026-002",
-      "modified": "2026-04-11T00:00:00Z",
-      "published": "2026-04-11T00:00:00Z",
-      "aliases": ["CVE-2025-30066", "GHSA-mrrh-fwg8-r2c3"],
-      "summary": "tj-actions/changed-files compromise",
-      "details": "Allows for information disclosure of secrets including, but not limited to, valid access keys, GitHub Personal Access Tokens (PATs), npm tokens, and private RSA keys.",
-      "severity": [
-        {
-          "type": "CVSS_V3",
-          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N"
-        }
-      ],
-      "affected": [
-        {
-          "package": {
-            "ecosystem": "GitHub Actions",
-            "name": "tj-actions/changed-files"
-          },
-          "ranges": [
-            {
-              "type": "ECOSYSTEM",
-              "events": [
-                {"introduced": "v0.0.1"},
-                {"fixed": "v46.0.1"}
-              ]
-            }
-          ],
-          "ecosystem_specific": {
-            "abom": {
-              "affected_period": {
-                "from": "2025-03-14T00:00:00Z",
-                "to": "2025-03-16T00:00:00Z"
-              }
-            }
-          }
-        }
-      ],
-      "references": [
-        {"type": "ADVISORY", "url": "https://www.cisa.gov/news-events/alerts/2025/03/18/supply-chain-compromise-third-party-tj-actionschanged-files-cve-2025-30066-and-reviewdogaction"},
-        {"type": "ADVISORY", "url": "https://github.com/advisories/GHSA-mrrh-fwg8-r2c3"},
-        {"type": "ADVISORY", "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-30066"}
-      ],
-      "database_specific": {
-        "abom": {
-          "recommended_actions": [
-            "Pin to commit SHA or update to safe tag (changed-files v46.0.1)",
-            "Rotate all secrets accessible to affected CI pipelines immediately",
-            "Audit downstream artifacts built during the exposure window"
-          ]
-        }
-      }
-    },
     {
       "schema_version": "1.7.5",
       "id": "ABOM-2026-001",
       "modified": "2026-03-26T00:00:00Z",
       "published": "2026-03-19T00:00:00Z",
-      "aliases": ["CVE-2026-33634", "GHSA-69fq-xp46-6x23"],
+      "aliases": [
+        "CVE-2026-33634",
+        "GHSA-69fq-xp46-6x23"
+      ],
       "summary": "Trivy GitHub Actions supply chain compromise",
       "details": "Compromised credentials from a non-atomic credential rotation allowed an attacker to force-push malicious payloads to 76 of 77 trivy-action tags and all setup-trivy tags. The injected code was an infostealer that exfiltrated CI secrets, SSH keys, cloud credentials, and tokens via encrypted channels. Exposure window was approximately 12 hours for trivy-action and 4 hours for setup-trivy starting 2026-03-19 ~17:43 UTC.",
       "severity": [
@@ -79,14 +28,20 @@
             {
               "type": "ECOSYSTEM",
               "events": [
-                {"introduced": "v0.0.1"},
-                {"fixed": "v0.35.0"}
+                {
+                  "introduced": "v0.0.1"
+                },
+                {
+                  "fixed": "v0.35.0"
+                }
               ]
             }
           ],
           "ecosystem_specific": {
             "abom": {
-              "tool_names": ["trivy"],
+              "tool_names": [
+                "trivy"
+              ],
               "affected_period": {
                 "from": "2026-03-19T17:43:00Z",
                 "to": "2026-03-20T05:40:00Z"
@@ -103,14 +58,20 @@
             {
               "type": "ECOSYSTEM",
               "events": [
-                {"introduced": "v0.2.0"},
-                {"fixed": "v0.2.6"}
+                {
+                  "introduced": "v0.2.0"
+                },
+                {
+                  "fixed": "v0.2.6"
+                }
               ]
             }
           ],
           "ecosystem_specific": {
             "abom": {
-              "tool_names": ["trivy"],
+              "tool_names": [
+                "trivy"
+              ],
               "affected_period": {
                 "from": "2026-03-19T17:43:00Z",
                 "to": "2026-03-19T21:44:00Z"
@@ -120,9 +81,18 @@
         }
       ],
       "references": [
-        {"type": "ADVISORY", "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23"},
-        {"type": "ADVISORY", "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-33634"},
-        {"type": "DISCUSSION", "url": "https://github.com/aquasecurity/trivy/discussions/10425"}
+        {
+          "type": "ADVISORY",
+          "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-33634"
+        },
+        {
+          "type": "DISCUSSION",
+          "url": "https://github.com/aquasecurity/trivy/discussions/10425"
+        }
       ],
       "database_specific": {
         "abom": {
@@ -132,7 +102,9 @@
               "aquasec/trivy:0.69.5",
               "aquasec/trivy:0.69.6"
             ],
-            "repos_to_check": ["tpcp-docs"],
+            "repos_to_check": [
+              "tpcp-docs"
+            ],
             "notes": "If exfiltration failed and INPUT_GITHUB_PAT was set, the payload created a public repo named tpcp-docs on the victim's GitHub account and uploaded stolen data as a release asset. Check your org for unexpected repos with this name."
           },
           "recommended_actions": [
@@ -141,6 +113,231 @@
             "Audit downstream artifacts built during the exposure window",
             "Check for unauthorized repos named tpcp-docs in your GitHub org",
             "Verify trivy binary integrity (safe versions are v0.69.2 and v0.69.3)"
+          ]
+        }
+      }
+    },
+    {
+      "schema_version": "1.7.5",
+      "id": "ABOM-2026-002",
+      "modified": "2026-04-11T00:00:00Z",
+      "published": "2026-04-11T00:00:00Z",
+      "aliases": [
+        "CVE-2025-30066",
+        "GHSA-mrrh-fwg8-r2c3"
+      ],
+      "summary": "tj-actions/changed-files compromise",
+      "details": "Allows for information disclosure of secrets including, but not limited to, valid access keys, GitHub Personal Access Tokens (PATs), npm tokens, and private RSA keys.",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "GitHub Actions",
+            "name": "tj-actions/changed-files"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "v0.0.1"
+                },
+                {
+                  "fixed": "v46.0.1"
+                }
+              ]
+            }
+          ],
+          "ecosystem_specific": {
+            "abom": {
+              "affected_period": {
+                "from": "2025-03-14T00:00:00Z",
+                "to": "2025-03-16T00:00:00Z"
+              }
+            }
+          }
+        }
+      ],
+      "references": [
+        {
+          "type": "ADVISORY",
+          "url": "https://www.cisa.gov/news-events/alerts/2025/03/18/supply-chain-compromise-third-party-tj-actionschanged-files-cve-2025-30066-and-reviewdogaction"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://github.com/advisories/GHSA-mrrh-fwg8-r2c3"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-30066"
+        }
+      ],
+      "database_specific": {
+        "abom": {
+          "recommended_actions": [
+            "Pin to commit SHA or update to safe tag (changed-files v46.0.1)",
+            "Rotate all secrets accessible to affected CI pipelines immediately",
+            "Audit downstream artifacts built during the exposure window"
+          ]
+        }
+      }
+    },
+    {
+      "schema_version": "1.7.5",
+      "id": "ABOM-2026-003",
+      "modified": "2026-04-24T00:00:00Z",
+      "published": "2026-04-24T00:00:00Z",
+      "aliases": [],
+      "summary": "Checkmarx supply chain compromise (TeamPCP, March-April 2026)",
+      "details": "A two-wave supply chain compromise of Checkmarx artifacts attributed to the TeamPCP threat actor. On 2026-03-23 between 12:58 and 16:50 UTC, all 35 tags of Checkmarx/kics-github-action and at least tag 2.3.28 of Checkmarx/ast-github-action were force-pushed to malicious setup.sh payloads via the compromised cx-plugins-releases service account. On 2026-04-22, Checkmarx/ast-github-action tag 2.3.35 was re-compromised between 14:17 and 15:41 UTC, and checkmarx/kics Docker images were trojanized between 12:31 and 12:59 UTC. The injected payloads were infostealers that harvested CI secrets, SSH keys, cloud credentials (including Kubernetes service account tokens), and GitHub tokens; the March wave additionally deployed a systemd-persistent Python backdoor and attempted Kubernetes privileged pod deployment. Credentials harvested during this campaign were subsequently used on 2026-04-22 to publish a malicious @bitwarden/cli 2026.4.0 npm package (outside ABOM scope). Same actor and tradecraft as the Trivy compromise five days before the first wave (ABOM-2026-001).",
+      "severity": [
+        {
+          "type": "CVSS_V3",
+          "score": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H"
+        }
+      ],
+      "affected": [
+        {
+          "package": {
+            "ecosystem": "GitHub Actions",
+            "name": "Checkmarx/kics-github-action"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "v0.0.1"
+                },
+                {
+                  "fixed": "v2.1.20"
+                }
+              ]
+            }
+          ],
+          "ecosystem_specific": {
+            "abom": {
+              "affected_period": {
+                "from": "2026-03-23T12:58:00Z",
+                "to": "2026-03-23T16:50:00Z"
+              }
+            }
+          }
+        },
+        {
+          "package": {
+            "ecosystem": "GitHub Actions",
+            "name": "Checkmarx/ast-github-action"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "v0.0.1"
+                },
+                {
+                  "fixed": "v2.3.33"
+                }
+              ]
+            }
+          ],
+          "ecosystem_specific": {
+            "abom": {
+              "affected_period": {
+                "from": "2026-03-23T12:58:00Z",
+                "to": "2026-03-23T16:50:00Z"
+              }
+            }
+          }
+        },
+        {
+          "package": {
+            "ecosystem": "GitHub Actions",
+            "name": "Checkmarx/ast-github-action"
+          },
+          "ranges": [
+            {
+              "type": "ECOSYSTEM",
+              "events": [
+                {
+                  "introduced": "v2.3.35"
+                },
+                {
+                  "fixed": "v2.3.36"
+                }
+              ]
+            }
+          ],
+          "ecosystem_specific": {
+            "abom": {
+              "affected_period": {
+                "from": "2026-04-22T14:17:00Z",
+                "to": "2026-04-22T15:41:00Z"
+              }
+            }
+          }
+        }
+      ],
+      "references": [
+        {
+          "type": "ADVISORY",
+          "url": "https://checkmarx.com/blog/checkmarx-security-update/"
+        },
+        {
+          "type": "ADVISORY",
+          "url": "https://checkmarx.com/blog/checkmarx-security-update-april-22/"
+        },
+        {
+          "type": "ARTICLE",
+          "url": "https://www.wiz.io/blog/teampcp-attack-kics-github-action"
+        },
+        {
+          "type": "ARTICLE",
+          "url": "https://www.stepsecurity.io/blog/checkmarx-kics-github-action-compromised-malware-injected-in-all-git-tags"
+        },
+        {
+          "type": "ARTICLE",
+          "url": "https://socket.dev/blog/checkmarx-supply-chain-compromise"
+        },
+        {
+          "type": "ARTICLE",
+          "url": "https://socket.dev/blog/bitwarden-cli-compromised"
+        },
+        {
+          "type": "ARTICLE",
+          "url": "https://www.bleepingcomputer.com/news/security/new-checkmarx-supply-chain-breach-affects-kics-analysis-tool/"
+        }
+      ],
+      "database_specific": {
+        "abom": {
+          "indicators": {
+            "docker_images": [
+              "checkmarx/kics:v2.1.20",
+              "checkmarx/kics:v2.1.20-debian",
+              "checkmarx/kics:v2.1.21",
+              "checkmarx/kics:v2.1.21-debian",
+              "checkmarx/kics:alpine",
+              "checkmarx/kics:debian",
+              "checkmarx/kics:latest"
+            ],
+            "repos_to_check": [
+              "docs-tpcp"
+            ],
+            "notes": "March wave C2: checkmarx[.]zone (83.142.209.11). Fallback exfiltration creates a public repo named docs-tpcp under the victim's GitHub account and uploads the stolen tarball as a release asset (the Trivy campaign used tpcp-docs; covered in ABOM-2026-001). Initial publish identity was the cx-plugins-releases service account (GitHub user ID 225848595); audit org audit logs for unexpected pushes from this account. Host persistence paths: ~/.config/sysmon/sysmon.py, /root/.config/sysmon/sysmon.py, and /root/.config/systemd/user/sysmon.service. A backdoor Python script polls https://checkmarx[.]zone/raw for follow-on payloads. April wave C2: checkmarx[.]cx (91.195.240.123) and audit.checkmarx[.]cx (94.154.172.43). The April wave Docker image tags listed above were re-pushed clean by Checkmarx (v2.1.21 was deleted entirely); they remain IOCs for any image pulled during the 12:31-12:59 UTC window on 2026-04-22."
+          },
+          "recommended_actions": [
+            "Pin to commit SHA or update to safe tag (kics-github-action v2.1.20, ast-github-action v2.3.36)",
+            "Re-pin any SHA references to commits reachable from current upstream refs; SHAs from the force-pushed tags remain in git history and continue to execute the malicious payload",
+            "Rotate all secrets accessible to affected CI pipelines, including GitHub tokens, cloud credentials, SSH keys, and Kubernetes service account tokens",
+            "Check for unauthorized repos named docs-tpcp in your GitHub org",
+            "Audit Kubernetes clusters for unexpected privileged pods and for systemd units at /root/.config/systemd/user/sysmon.service",
+            "Re-pull checkmarx/kics Docker images using a digest pinned outside the 2026-04-22 12:31-12:59 UTC window, or move to SHA-pinned references"
           ]
         }
       }
