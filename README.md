@@ -4,13 +4,13 @@ Community-curated advisory database for [abom](https://github.com/JulietSecurity
 
 ## How it works
 
-`abom --check` fetches `db/advisories.json` from this repo at runtime to flag known-compromised GitHub Actions in your CI/CD pipelines.
+`abom --check` fetches [advisories.juliet.sh/db/advisories.json](https://advisories.juliet.sh/db/advisories.json) at runtime to flag known-compromised GitHub Actions in your CI/CD pipelines. The JSON database is compiled from the YAML sources in [`advisories/`](advisories/) and published automatically when PRs merge to `main`.
 
 The database is fetched automatically — no configuration needed. If the fetch fails (offline, rate limited), abom falls back to built-in data shipped with each release.
 
 ## Current advisories
 
-See [advisories.juliet.sh/db/advisories.json](db/advisories.json) for the current list.
+See [advisories.juliet.sh/db/advisories.json](https://advisories.juliet.sh/db/advisories.json) for the current list, or browse the YAML sources in [`advisories/`](advisories/).
 
 ## Contributing
 
