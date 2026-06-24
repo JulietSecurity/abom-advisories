@@ -1,0 +1,41 @@
+schema_version: "1.7.5"
+id: ABOM-2026-004
+modified: "2026-06-24T00:00:00Z"
+published: "2026-06-24T00:00:00Z"
+aliases: []
+summary: codfish/semantic-release-action compromise
+details: >-
+    An attacker added execution of an obfuscated Javascript file to the
+    semantic-release-action. The attacker then re-tagged previously-good tags
+    to point to the compromised workflow. The compromised action harvests and
+    exfiltrates authentication tokens. It then self-propagates to targeted
+    repositories.
+affected:
+  - package:
+      ecosystem: GitHub Actions
+      name: codfish/semantic-release-action
+    ranges:
+      - type: ECOSYSTEM
+        events:
+          - introduced: v0.0.1
+    ecosystem_specific:
+      abom:
+        affected_period:
+          from: "2026-06-24T15:39:06Z"
+          to:
+references:
+  - type: ARTICLE
+    url: "https://sean.dev/2026/06/codfish/semantic-release-action-compromised/"
+database_specific:
+  abom:
+    indicators:
+      notes: >-
+        Indicators include:
+        Outbound GET to GitHub authentication endpoint immediately followed by a POST to an external domain.
+        Outbound POST requests to `api.github.com/repos/*/git/trees` from a step not expected to perform Git operations.
+        Unexpected invocation of `bun` process.
+        Newly-committed `index.js` file in a repository.
+    recommended-actions:
+      - Pin to last known-good commit hash (`codfish/semantic-release-action@da160b1641c06934ddd00715c6594be85acb5fce`)
+      - Rotate all secrets accessible to affected CI pipelines, including GitHub tokens, cloud credentials, SSH keys, and Kubernetes service account tokens
+      - Monitor for outbound traffic and treat any non-GitHub traffic as potentially exfiltrating
